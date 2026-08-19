@@ -68,6 +68,11 @@ Neither manifest sets a `version`. A pinned version would mean users only
 receive updates when that string changes — leaving it unset is what makes
 pushing to the default branch the release for Claude clients.
 
+## License
+
+[Apache-2.0](LICENSE). Section 6 reserves the Synapdeck trademarks: a fork may
+modify these skills, but may not identify itself by the Synapdeck name.
+
 ## Consumers
 
 Pushing here releases to Claude clients immediately. The other channels are

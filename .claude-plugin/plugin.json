@@ -8,6 +8,7 @@
   },
   "homepage": "https://synapdeck.com",
   "repository": "https://github.com/synapdeck/skills",
+  "license": "Apache-2.0",
   "keywords": ["flashcards", "spaced-repetition", "study", "srs", "anki"],
   "mcpServers": {
     "synapdeck": {

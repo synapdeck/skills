@@ -10,3 +10,4 @@
   repository.
 - Claude plugin marketplace manifests, so the repository can be installed
   directly in Claude and Claude Code.
+- Apache-2.0 license.
