@@ -1,0 +1,24 @@
+{
+  "name": "synapdeck",
+  "owner": {
+    "name": "Synapdeck",
+    "url": "https://synapdeck.com"
+  },
+  "description": "Agent skills for Synapdeck, the collaborative spaced-repetition flashcard platform.",
+  "plugins": [
+    {
+      "name": "synapdeck",
+      "source": "./",
+      "displayName": "Synapdeck",
+      "description": "Work with Synapdeck decks, notes, and note types from your AI client. Bundles the Synapdeck skills and a connection to the hosted Synapdeck MCP server.",
+      "author": {
+        "name": "Synapdeck",
+        "url": "https://synapdeck.com"
+      },
+      "homepage": "https://synapdeck.com",
+      "repository": "https://github.com/synapdeck/skills",
+      "keywords": ["flashcards", "spaced-repetition", "study", "srs", "anki"],
+      "category": "productivity"
+    }
+  ]
+}
