@@ -89,7 +89,11 @@ for (const dirName of skillDirs) {
     continue;
   }
 
-  const { name, description } = frontmatter as { name?: unknown; description?: unknown };
+  const { name, description, metadata } = frontmatter as {
+    name?: unknown;
+    description?: unknown;
+    metadata?: unknown;
+  };
   if (typeof name !== "string" || !NAME_PATTERN.test(name) || name.length > 64) {
     fail(dirName, `name ${JSON.stringify(name)} must be 1-64 chars, lowercase alphanumeric and single hyphens`);
   }
@@ -98,6 +102,23 @@ for (const dirName of skillDirs) {
   }
   if (typeof description !== "string" || description.length < 1 || description.length > 1024) {
     fail(dirName, "description must be a string of 1-1024 characters");
+  }
+
+  // The Agent Skills spec confines metadata to string values, and the monorepo
+  // decodes it as such — a non-string here passes this gate and breaks that
+  // build once the pin moves. synapdeck-requires-mcp-tools is consequently a
+  // whitespace-separated string, not a YAML sequence.
+  if (metadata !== undefined) {
+    if (typeof metadata !== "object" || metadata == null || Array.isArray(metadata)) {
+      fail(dirName, "metadata must be a YAML mapping");
+    }
+    else {
+      for (const [key, value] of Object.entries(metadata)) {
+        if (typeof value !== "string") {
+          fail(dirName, `metadata.${key} must be a string, got ${Array.isArray(value) ? "array" : typeof value}`);
+        }
+      }
+    }
   }
 
   for (const target of relativeLinkTargets(body)) {
