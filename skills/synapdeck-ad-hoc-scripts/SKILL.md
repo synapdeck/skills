@@ -1,6 +1,8 @@
 ---
 name: synapdeck-ad-hoc-scripts
 description: Use when writing, debugging, or reviewing the Python ad hoc script attached to a Synapdeck note — the script that runs immediately before every card render to produce extra text fields, above all randomized parameters in math and science questions. Covers what scripts are for, when they run and deliberately don't, how to read the note's fields, the return contract, the preview-then-save authoring loop, and the field-name matching rule that silently returns None.
+metadata:
+  synapdeck-requires-mcp-tools: create_note get_note preview_ad_hoc_script update_note
 ---
 
 # Synapdeck ad hoc scripts
