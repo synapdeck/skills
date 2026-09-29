@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-16T23:11:07.211Z",
-  "sourceCommit": "1f3f431a285811d3c9c9c3e5504eafc11f0fbdab",
+  "generatedAt": "2026-09-29T06:08:31.219Z",
+  "sourceCommit": "58ea51a9659f57bb36661e7df594e0f798d39b9d",
   "mcpTools": [
     "add_peer_relationship",
     "add_prerequisite",
@@ -40,6 +40,7 @@
     "get_review_history",
     "get_scheduling_config",
     "get_team",
+    "hold_derivation_method_version",
     "list_anki_import_sessions",
     "list_anki_translation_warnings",
     "list_decks",
