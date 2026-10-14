@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-29T06:08:31.219Z",
-  "sourceCommit": "58ea51a9659f57bb36661e7df594e0f798d39b9d",
+  "generatedAt": "2026-10-14T03:07:46.919Z",
+  "sourceCommit": "fc3205356c6502553c1508172a934e479215c722",
   "mcpTools": [
     "add_peer_relationship",
     "add_prerequisite",
@@ -66,9 +66,11 @@
     "set_default_scheduling_config",
     "set_template_prerequisites",
     "suspend_cards",
+    "suspend_deck",
     "undelete_deck",
     "undelete_derivation_method",
     "undelete_note",
+    "unsuspend_deck",
     "update_deck",
     "update_derivation_method",
     "update_note",
