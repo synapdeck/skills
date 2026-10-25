@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-14T03:07:46.919Z",
-  "sourceCommit": "fc3205356c6502553c1508172a934e479215c722",
+  "generatedAt": "2026-10-25T02:48:16.197Z",
+  "sourceCommit": "bec1d59edd4a12c423a2bae1788fa5c964c390af",
   "mcpTools": [
     "add_peer_relationship",
     "add_prerequisite",
@@ -70,6 +70,7 @@
     "undelete_deck",
     "undelete_derivation_method",
     "undelete_note",
+    "undelete_note_type",
     "unsuspend_deck",
     "update_deck",
     "update_derivation_method",
