@@ -12,3 +12,9 @@ How the tools fit together:
 - `apply_deck_blueprint` creates a whole structure in one transaction. Run it with `dryRun: true` first and show the plan to the user.
 - A mistake in template text (an unknown `{{ Field }}`, a directive naming a missing field) does not fail the write that saves it. It shows up in `preview_card` diagnostics for a real note.
 - Changing a note type or one of its templates re-renders its notes in the background. The result carries a `cascadeOperationId` to pass to `get_operation_status`.
+
+## Skills
+
+Before starting one of these tasks, load its skill:
+
+- `synapdeck-deck-design` (`skill://synapdeck-deck-design/SKILL.md`): Use when a Synapdeck user wants to start studying a new subject, restructure an existing deck, or think through how to organize a body of knowledge into flashcards — designing the deck hierarchy, note types, fields, templates, derivation methods and the prerequisite ordering between templates, then creating it with apply_deck_blueprint. Also use when choosing between reusing or extending an existing note type and creating a new one.

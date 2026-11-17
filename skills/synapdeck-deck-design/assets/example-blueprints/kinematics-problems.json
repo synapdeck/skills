@@ -1,0 +1,82 @@
+{
+  "blueprint": {
+    "decks": [
+      {
+        "handle": "physics",
+        "name": "Physics",
+        "description": "Introductory mechanics: the equations themselves, then problems that use them."
+      },
+      { "handle": "kinematics", "name": "Kinematics", "parentHandle": "physics" },
+      { "handle": "equations", "name": "Equations", "parentHandle": "kinematics" },
+      { "handle": "problems", "name": "Problems", "parentHandle": "kinematics" }
+    ],
+    "noteTypes": [
+      {
+        "handle": "equation",
+        "name": "Physics Equation",
+        "description": "One equation: its name, the formula, what each symbol means, and when it applies.",
+        "writingSpaceHint": "medium",
+        "fields": [
+          { "type": "text", "name": "Name", "lang": "en" },
+          { "type": "text", "name": "Formula" },
+          { "type": "text", "name": "Symbols", "lang": "en" },
+          { "type": "text", "name": "When to use", "lang": "en" }
+        ],
+        "templates": [
+          {
+            "name": "Recall formula",
+            "front": "Write the equation for **{{ Name }}**.",
+            "back": "Write the equation for **{{ Name }}**.\n\n{{ Formula }}\n\n{{ Symbols }}"
+          },
+          {
+            "name": "When to use",
+            "front": "When do you reach for this equation?\n\n{{ Formula }}",
+            "back": "{{ @front }}\n\n{{ When to use }}",
+            "renderingCriterion": { "condition": "textFieldNonblank", "controllingFieldName": "When to use" }
+          }
+        ],
+        "templateRelations": {
+          "prereqs": [{ "dependentTemplateName": "When to use", "prereqTemplateName": "Recall formula" }]
+        }
+      },
+      {
+        "handle": "problem",
+        "name": "Kinematics Problem",
+        "description": "A worked problem. The first card asks only which equation fits; the second asks for the full solution.",
+        "writingSpaceHint": "show-work",
+        "fields": [
+          { "type": "text", "name": "Problem", "lang": "en" },
+          {
+            "type": "enum",
+            "name": "Equation",
+            "options": [
+              { "label": "v = v₀ + at", "internalLabel": "no-displacement", "textColor": "blue-bold" },
+              { "label": "Δx = v₀t + ½at²", "internalLabel": "no-final-velocity", "textColor": "green-bold" },
+              { "label": "v² = v₀² + 2aΔx", "internalLabel": "no-time", "textColor": "purple-bold" },
+              { "label": "Δx = ½(v₀ + v)t", "internalLabel": "no-acceleration", "textColor": "orange-bold" }
+            ]
+          },
+          { "type": "text", "name": "Why this equation", "lang": "en" },
+          { "type": "text", "name": "Solution", "lang": "en" },
+          { "type": "image", "name": "Diagram" }
+        ],
+        "templates": [
+          {
+            "name": "Choose equation",
+            "front": "{{ Problem }}\n\n:if-nonblank[{{ Diagram }}]{field=\"Diagram\"}\n\n**Which kinematic equation fits?**",
+            "back": "{{ @front }}\n\n## :color-coding[{{ Equation }}]{field=\"Equation\" when=\"always\"}\n\n{{ Why this equation }}",
+            "writingSpaceOverride": "small"
+          },
+          {
+            "name": "Solve",
+            "front": "{{ Problem }}\n\n:if-nonblank[{{ Diagram }}]{field=\"Diagram\"}\n\n**Solve it. Show your work.**",
+            "back": "{{ @front }}\n\n:color-coding[{{ Equation }}]{field=\"Equation\" when=\"always\"}\n\n{{ Solution }}"
+          }
+        ],
+        "templateRelations": {
+          "prereqs": [{ "dependentTemplateName": "Solve", "prereqTemplateName": "Choose equation" }]
+        }
+      }
+    ]
+  }
+}

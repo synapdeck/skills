@@ -1,0 +1,80 @@
+{
+  "blueprint": {
+    "decks": [
+      {
+        "handle": "medterm",
+        "name": "Medical Terminology",
+        "description": "Word parts first, then the terms built from them, grouped by body system."
+      },
+      { "handle": "parts", "name": "Word Parts", "parentHandle": "medterm" },
+      { "handle": "terms", "name": "Terms", "parentHandle": "medterm" },
+      { "handle": "cardio", "name": "Cardiovascular", "parentHandle": "terms" },
+      { "handle": "resp", "name": "Respiratory", "parentHandle": "terms" },
+      { "handle": "gi", "name": "Digestive", "parentHandle": "terms" }
+    ],
+    "noteTypes": [
+      {
+        "handle": "part",
+        "name": "Medical Word Part",
+        "description": "A prefix, root or suffix and what it means.",
+        "writingSpaceHint": "small",
+        "fields": [
+          { "type": "text", "name": "Part", "lang": "en" },
+          {
+            "type": "enum",
+            "name": "Kind",
+            "options": [
+              { "label": "Prefix", "textColor": "blue-bold" },
+              { "label": "Root", "textColor": "green-bold" },
+              { "label": "Suffix", "textColor": "purple-bold" }
+            ]
+          },
+          { "type": "text", "name": "Meaning", "lang": "en" },
+          { "type": "text", "name": "Example term", "lang": "en" }
+        ],
+        "templates": [
+          {
+            "name": "Part → meaning",
+            "front": "# :color-coding[{{ Part }}]{field=\"Kind\" when=\"always\"}\n\nWhat does this {{ Kind }} mean?",
+            "back": "{{ @front }}\n\n**{{ Meaning }}**\n\n:if-nonblank[*e.g.* {{ Example term }}]{field=\"Example term\"}"
+          },
+          {
+            "name": "Meaning → part",
+            "front": "Which {{ Kind }} means **{{ Meaning }}**?",
+            "back": "Which {{ Kind }} means **{{ Meaning }}**?\n\n# :type-in[{{ Part }}]{ignore-case}"
+          }
+        ],
+        "templateRelations": {
+          "prereqs": [{ "dependentTemplateName": "Meaning → part", "prereqTemplateName": "Part → meaning" }]
+        }
+      },
+      {
+        "handle": "term",
+        "name": "Medical Term",
+        "description": "A term, how it breaks into word parts, and its definition.",
+        "writingSpaceHint": "medium",
+        "fields": [
+          { "type": "text", "name": "Term", "lang": "en" },
+          { "type": "text", "name": "Breakdown", "lang": "en" },
+          { "type": "text", "name": "Definition", "lang": "en" },
+          { "type": "text", "name": "Pronunciation", "lang": "en" }
+        ],
+        "templates": [
+          {
+            "name": "Term → definition",
+            "front": "# {{ Term }}\n\n:hint[{{ Breakdown }}]{label=\"Break it down\"}",
+            "back": "# {{ Term }}\n\n:if-nonblank[*{{ Pronunciation }}*]{field=\"Pronunciation\"}\n\n{{ Breakdown }}\n\n**{{ Definition }}**"
+          },
+          {
+            "name": "Definition → term",
+            "front": "What is the term for: **{{ Definition }}**?",
+            "back": "What is the term for: **{{ Definition }}**?\n\n# :type-in[{{ Term }}]{ignore-case}\n\n{{ Breakdown }}"
+          }
+        ],
+        "templateRelations": {
+          "prereqs": [{ "dependentTemplateName": "Definition → term", "prereqTemplateName": "Term → definition" }]
+        }
+      }
+    ]
+  }
+}

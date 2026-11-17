@@ -1,0 +1,65 @@
+{
+  "blueprint": {
+    "decks": [
+      {
+        "handle": "japanese",
+        "name": "Japanese",
+        "description": "Vocabulary for a beginner working through a textbook, one subdeck per chapter."
+      },
+      { "handle": "ch1", "name": "Chapter 1: Greetings", "parentHandle": "japanese" },
+      { "handle": "ch2", "name": "Chapter 2: Food", "parentHandle": "japanese" },
+      { "handle": "ch3", "name": "Chapter 3: Daily Life", "parentHandle": "japanese" }
+    ],
+    "noteTypes": [
+      {
+        "handle": "vocab",
+        "name": "Japanese Vocabulary",
+        "description": "One word: its written form, kana reading, English meaning, part of speech, an optional example sentence and optional audio.",
+        "writingSpaceHint": "small",
+        "fields": [
+          { "type": "text", "name": "Word", "lang": "ja" },
+          { "type": "text", "name": "Reading", "lang": "ja" },
+          { "type": "text", "name": "Meaning", "lang": "en" },
+          {
+            "type": "enum",
+            "name": "Part of speech",
+            "options": [
+              { "label": "Noun", "textColor": "blue-bold" },
+              { "label": "Verb", "textColor": "red-bold" },
+              { "label": "i-adjective", "textColor": "green-bold" },
+              { "label": "na-adjective", "textColor": "teal-bold" },
+              { "label": "Adverb", "textColor": "purple-bold" },
+              { "label": "Expression", "textColor": "gray-bold" }
+            ]
+          },
+          { "type": "text", "name": "Example sentence", "lang": "ja" },
+          { "type": "text", "name": "Example translation", "lang": "en" },
+          { "type": "audio", "name": "Audio" }
+        ],
+        "templates": [
+          {
+            "name": "Recognition",
+            "front": "# :color-coding[{{ Word }}]{field=\"Part of speech\" when=\"after reveal\"}",
+            "back": "{{ @front }}\n\n{{ Reading }}\n\n**{{ Meaning }}** · *{{ Part of speech }}*\n\n:::if-nonblank{field=\"Example sentence\"}\n> {{ Example sentence }}\n>\n> {{ Example translation }}\n:::\n\n:if-nonblank[{{ Audio }}]{field=\"Audio\"}"
+          },
+          {
+            "name": "Production",
+            "front": "How do you say **{{ Meaning }}**?\n\n:hint[{{ Part of speech }}]{label=\"Part of speech\"}",
+            "back": "How do you say **{{ Meaning }}**?\n\n# :type-in[{{ Word }}]\n\n{{ Reading }}\n\n:if-nonblank[{{ Audio }}]{field=\"Audio\"}"
+          },
+          {
+            "name": "Listening",
+            "front": ":::if-nonblank{field=\"Audio\"}\nWhat word is this?\n\n{{ Audio }}\n:::",
+            "back": "{{ @front }}\n\n# {{ Word }}\n\n{{ Reading }} — **{{ Meaning }}**"
+          }
+        ],
+        "templateRelations": {
+          "prereqs": [
+            { "dependentTemplateName": "Production", "prereqTemplateName": "Recognition" },
+            { "dependentTemplateName": "Listening", "prereqTemplateName": "Recognition" }
+          ]
+        }
+      }
+    ]
+  }
+}
