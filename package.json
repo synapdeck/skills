@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "bun test",
     "validate": "bun scripts/validate-skills.ts",
     "typecheck": "tsc --noEmit"
   },
