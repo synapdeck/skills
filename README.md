@@ -28,6 +28,8 @@ npx skills add synapdeck.com
 
 **Any MCP client, skills aside**
 Connect to `https://synapdeck.com/api/mcp` (Streamable HTTP, OAuth 2.1).
+Authorization metadata is published at
+`https://synapdeck.com/.well-known/oauth-protected-resource`.
 
 ## Layout
 
@@ -35,11 +37,17 @@ Connect to `https://synapdeck.com/api/mcp` (Streamable HTTP, OAuth 2.1).
 .claude-plugin/
   marketplace.json   # this repo as a Claude marketplace; the plugin source is "./"
   plugin.json        # the plugin itself: metadata + the Synapdeck MCP server
+shared/
+  <topic>.md         # reference material written once; copied into the skills that declare it
+  server-instructions.md  # header of instructions.md
 skills/
   <skill-name>/
     SKILL.md         # frontmatter name must equal the directory name
+    references/<topic>.md  # GENERATED copy of shared/<topic>.md — do not edit
+instructions.md      # GENERATED: the MCP server instructions /api/mcp sends on connect
 scripts/
-  validate-skills.ts   # bun run validate
+  generate.ts        # bun run generate
+  validate-skills.ts # bun run validate
 ```
 
 Because the marketplace entry and the plugin manifest both live at the
@@ -57,11 +65,29 @@ characters, describing when an agent should load the skill).
 Supporting files go in subdirectories beside `SKILL.md`; relative links in the
 body must resolve to files that ship with the skill.
 
+Every skill sets `metadata.synapdeck-kind`: `task` for a workflow the user asks
+for ("design a deck"), `reference` for material an agent looks things up in
+("how does cloze syntax work"). Task skills are listed in `instructions.md`, so
+MCP clients learn about them on connect.
+
+No host supports one skill depending on another, and some install skills one at
+a time, so a skill can't link to another skill's files. Material more than one
+skill needs lives once in `shared/<topic>.md`. A skill that needs it lists the
+topic in `metadata.synapdeck-shared` (space-separated), links to
+`references/<topic>.md`, and runs `bun run generate`, which writes the copy.
+Commit the copies: the Claude plugin installs straight from this repository.
+`bun run validate` fails when a copy or `instructions.md` is out of date.
+
+A skill may name another skill in backticks as a hint ("for the full syntax,
+see `synapdeck-card-syntax`"); validation checks the name exists.
+
 Validate before pushing:
 
 ```bash
 bun install
+bun run generate
 bun run validate
+bun test
 ```
 
 Neither manifest sets a `version`. A pinned version would mean users only
