@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "bun test",
+    "generate": "bun scripts/generate.ts",
     "validate": "bun scripts/validate-skills.ts",
     "typecheck": "tsc --noEmit"
   },

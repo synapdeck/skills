@@ -1,6 +1,8 @@
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { collectFiles, listSkillDirs, readSkill } from "./skillSource.ts";
+import { planGeneratedFiles, SKILL_KINDS, staleGeneratedCopies } from "./generated.ts";
+import { collectFiles, listSkillDirs, metadataString, readSkill } from "./skillSource.ts";
 
 const NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MARKDOWN_LINK_PATTERN = /!?\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
@@ -28,6 +30,10 @@ function relativeLinkTargets(body: string): string[] {
   }
   return targets;
 }
+
+// Backticked names that look like skills but are this repo's metadata keys.
+const METADATA_KEYS = new Set(["synapdeck-kind", "synapdeck-shared", "synapdeck-requires-mcp-tools"]);
+const SKILL_NAME_PATTERN = /`(synapdeck-[a-z0-9-]+)`/g;
 
 /**
  * Every rule a skill must satisfy, checked against the repo at `repoRoot`.
@@ -79,6 +85,11 @@ export function validateRepo(repoRoot: string): string[] {
       }
     }
 
+    const kind = metadataString(parsed.skill, "synapdeck-kind");
+    if (kind === undefined || !(SKILL_KINDS as readonly string[]).includes(kind)) {
+      fail(dirName, `metadata.synapdeck-kind must be "task" or "reference"`);
+    }
+
     const files = collectFiles(join(skillsDir, dirName));
     for (const target of relativeLinkTargets(body)) {
       if (target.split("/").includes("..")) {
@@ -88,6 +99,31 @@ export function validateRepo(repoRoot: string): string[] {
         fail(dirName, `SKILL.md links to "${target}", which does not exist in the skill directory`);
       }
     }
+  }
+
+  // Skills name each other in prose as hints; a renamed or removed skill must not leave a dangling hint.
+  const known = new Set(skillDirs);
+  for (const dirName of skillDirs) {
+    for (const file of collectFiles(join(skillsDir, dirName)).filter(path => path.endsWith(".md"))) {
+      const content = readFileSync(join(skillsDir, dirName, file), "utf8");
+      for (const match of content.matchAll(SKILL_NAME_PATTERN)) {
+        const named = match[1] ?? "";
+        if (!known.has(named) && !METADATA_KEYS.has(named)) {
+          errors.push(`skills/${dirName}/${file} names skill "${named}", which does not exist`);
+        }
+      }
+    }
+  }
+
+  const plan = planGeneratedFiles(repoRoot);
+  errors.push(...plan.errors);
+  for (const [path, expected] of plan.files) {
+    const target = join(repoRoot, path);
+    if (!existsSync(target)) errors.push(`${path} is missing; run bun run generate`);
+    else if (readFileSync(target, "utf8") !== expected) errors.push(`${path} is out of date; run bun run generate`);
+  }
+  for (const path of staleGeneratedCopies(repoRoot, plan)) {
+    errors.push(`${path} is a generated copy no skill declares; run bun run generate`);
   }
 
   return errors;
