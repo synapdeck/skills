@@ -4,6 +4,11 @@
 
 ### Added
 
+- `synapdeck-card-syntax`, a reference skill for template and field markup:
+  placeholders, filters, cloze, type-in answers, hints, conditionals, color
+  coding, ruby, math, sequences, variable text, image quizzes and rendering
+  criteria. Its reference, `shared/card-syntax.md`, is written to be copied
+  into task skills.
 - Shared references: material written once in `shared/` and copied into each
   skill that declares it, kept current by `bun run generate` and checked by
   `bun run validate`.
