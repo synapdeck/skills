@@ -4,6 +4,11 @@
 
 ### Added
 
+- `synapdeck-deck-design` — interviewing a user about what they're learning
+  and turning it into decks, note types, fields, templates and template
+  prerequisites, applied with `apply_deck_blueprint`. Ships the shared
+  blueprint format reference, design patterns per domain, prereq conventions, and
+  three dry-run-validated example blueprints.
 - `synapdeck-card-syntax`, a reference skill for template and field markup:
   placeholders, filters, cloze, type-in answers, hints, conditionals, color
   coding, ruby, math, sequences, variable text, image quizzes and rendering
