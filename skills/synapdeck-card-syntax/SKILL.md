@@ -60,10 +60,10 @@ anything beyond the rules below.
 
 ## Check your work
 
-Saving a note type does not validate template text: an unknown placeholder, a
-directive naming a missing field, or color coding on an uncolored enum is
-accepted by every write (`add_template` and `update_template` too), `dryRun`
-included. Find mistakes by rendering.
+Only `apply_deck_blueprint` checks template text, and only for field names.
+`create_note_type`, `update_note_type`, `add_template` and `update_template`
+accept an unknown placeholder, a directive naming a missing field, or color
+coding on an uncolored enum. Find mistakes by rendering.
 
 1. Get the template ids and field names from `get_note_type`. Before
    `add_template`, check no template already has that name.
