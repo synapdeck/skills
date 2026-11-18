@@ -54,7 +54,7 @@ describe("planGeneratedFiles", () => {
     expect(planGeneratedFiles(root).errors).toEqual(["shared/server-instructions.md does not exist"]);
   });
 
-  test("indexes only task skills in instructions.md", () => {
+  test("indexes task skills, then reference skills, in instructions.md", () => {
     const root = makeRepo({
       "shared/server-instructions.md": "Header.\n\n",
       "skills/synapdeck-a/SKILL.md": skill("synapdeck-a", "task"),
@@ -62,14 +62,23 @@ describe("planGeneratedFiles", () => {
     });
     expect(planGeneratedFiles(root).files.get("instructions.md")).toBe(
       "Header.\n\n## Skills\n\nBefore starting one of these tasks, load its skill:\n\n"
-      + "- `synapdeck-a` (`skill://synapdeck-a/SKILL.md`): Use when doing synapdeck-a.\n",
+      + "- `synapdeck-a` (`skill://synapdeck-a/SKILL.md`): Use when doing synapdeck-a.\n"
+      + "\nLoad these when a task needs what they cover:\n\n"
+      + "- `synapdeck-b` (`skill://synapdeck-b/SKILL.md`): Use when doing synapdeck-b.\n",
     );
   });
 });
 
 describe("renderInstructions", () => {
-  test("is just the trimmed header when there are no task skills", () => {
-    expect(renderInstructions("Header.\n\n\n", [])).toBe("Header.\n");
+  test("is just the trimmed header when there are no skills", () => {
+    expect(renderInstructions("Header.\n\n\n", [], [])).toBe("Header.\n");
+  });
+
+  test("lists reference skills without a task section when there are no task skills", () => {
+    expect(renderInstructions("Header.\n", [], [{ name: "synapdeck-b", description: "Use when b." }])).toBe(
+      "Header.\n\n## Skills\n\nLoad these when a task needs what they cover:\n\n"
+      + "- `synapdeck-b` (`skill://synapdeck-b/SKILL.md`): Use when b.\n",
+    );
   });
 });
 

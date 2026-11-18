@@ -67,8 +67,8 @@ body must resolve to files that ship with the skill.
 
 Every skill sets `metadata.synapdeck-kind`: `task` for a workflow the user asks
 for ("design a deck"), `reference` for material an agent looks things up in
-("how does cloze syntax work"). Task skills are listed in `instructions.md`, so
-MCP clients learn about them on connect.
+("how does cloze syntax work"). `instructions.md` lists every skill, task skills
+first, so MCP clients learn about them on connect.
 
 No host supports one skill depending on another, and some install skills one at
 a time, so a skill can't link to another skill's files. Material more than one
