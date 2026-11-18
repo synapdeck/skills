@@ -25,18 +25,32 @@ export function sharedTopics(skill: SkillDoc): string[] {
   return raw === undefined ? [] : raw.split(/\s+/).filter(topic => topic !== "");
 }
 
+interface IndexedSkill {
+  readonly name: string;
+  readonly description: string;
+}
+
+function indexEntries(skills: ReadonlyArray<IndexedSkill>): string {
+  return skills
+    .map(skill => `- \`${skill.name}\` (\`skill://${skill.name}/SKILL.md\`): ${skill.description.replace(/\s+/g, " ").trim()}\n`)
+    .join("");
+}
+
 /**
- * The server instructions: the hand-written header, then an index of the task
- * skills. Only task skills are indexed; reference skills are reached from them.
+ * The server instructions: the hand-written header, then an index of the
+ * skills, task skills first and reference skills after them.
  */
 export function renderInstructions(
   header: string,
-  tasks: ReadonlyArray<{ readonly name: string; readonly description: string }>,
+  tasks: ReadonlyArray<IndexedSkill>,
+  references: ReadonlyArray<IndexedSkill> = [],
 ): string {
   const base = `${header.trimEnd()}\n`;
-  if (tasks.length === 0) return base;
-  const entries = tasks.map(task => `- \`${task.name}\` (\`skill://${task.name}/SKILL.md\`): ${task.description.replace(/\s+/g, " ").trim()}`);
-  return `${base}\n## Skills\n\nBefore starting one of these tasks, load its skill:\n\n${entries.join("\n")}\n`;
+  if (tasks.length === 0 && references.length === 0) return base;
+  const sections: string[] = [];
+  if (tasks.length > 0) sections.push(`Before starting one of these tasks, load its skill:\n\n${indexEntries(tasks)}`);
+  if (references.length > 0) sections.push(`Load these when a task needs what they cover:\n\n${indexEntries(references)}`);
+  return `${base}\n## Skills\n\n${sections.join("\n")}`;
 }
 
 export interface GeneratedPlan {
@@ -53,7 +67,8 @@ export function planGeneratedFiles(repoRoot: string): GeneratedPlan {
   const skillsDir = join(repoRoot, "skills");
   const files = new Map<string, string>();
   const errors: string[] = [];
-  const tasks: Array<{ name: string; description: string }> = [];
+  const tasks: IndexedSkill[] = [];
+  const references: IndexedSkill[] = [];
 
   for (const dirName of listSkillDirs(skillsDir)) {
     const parsed = readSkill(skillsDir, dirName);
@@ -73,13 +88,15 @@ export function planGeneratedFiles(repoRoot: string): GeneratedPlan {
       files.set(`skills/${dirName}/references/${topic}.md`, generatedHeader(topic) + readFileSync(source, "utf8"));
     }
 
-    if (metadataString(skill, "synapdeck-kind") === "task" && typeof skill.description === "string") {
-      tasks.push({ name: dirName, description: skill.description });
+    if (typeof skill.description === "string") {
+      const kind = metadataString(skill, "synapdeck-kind");
+      if (kind === "task") tasks.push({ name: dirName, description: skill.description });
+      else if (kind === "reference") references.push({ name: dirName, description: skill.description });
     }
   }
 
   const header = join(repoRoot, INSTRUCTIONS_SOURCE);
-  if (existsSync(header)) files.set(INSTRUCTIONS_OUTPUT, renderInstructions(readFileSync(header, "utf8"), tasks));
+  if (existsSync(header)) files.set(INSTRUCTIONS_OUTPUT, renderInstructions(readFileSync(header, "utf8"), tasks, references));
   else errors.push(`${INSTRUCTIONS_SOURCE} does not exist`);
 
   return { files, errors };

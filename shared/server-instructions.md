@@ -10,5 +10,5 @@ How the tools fit together:
 
 - Create decks, note types and templates before notes: a note records the version of the note type it was created against.
 - `apply_deck_blueprint` creates a whole structure in one transaction. Run it with `dryRun: true` first and show the plan to the user.
-- A mistake in template text (an unknown `{{ Field }}`, a directive naming a missing field) does not fail the write that saves it. It shows up in `preview_card` diagnostics for a real note.
+- Only `apply_deck_blueprint` checks template text, and only the field names it mentions. Other writes save an unknown `{{ Field }}` or a directive naming a missing field without complaint. Either way, check the cards with `preview_card` on a real note.
 - Changing a note type or one of its templates re-renders its notes in the background. The result carries a `cascadeOperationId` to pass to `get_operation_status`.
