@@ -119,8 +119,8 @@ Design traps:
   question when the front has one.
 - **Gate optional media** with `:if-nonblank`: a bare `{{ Audio }}` on a note
   without audio renders an error.
-- **`textFieldNonblank` is text-only.** To skip a card when an image or audio
-  field is empty, wrap the whole front in `:::if-nonblank{field="…"}` … `:::`.
+- **Skip a card when its field is empty** with a `fieldNonblank` criterion;
+  it works on text, image and audio fields.
 - **Template names must be unique** within a note type, ignoring case;
   `templateRelations` refers to templates by name.
 
@@ -159,9 +159,8 @@ diagram from SMILES; audio from a tone sequence:
                   "inputs": { "sourceText": "Word" } } }
 ```
 
-`list_derivation_methods` does not report input names. Make your best guess
-and dry-run: the error lists the names it expected
-(`has no input "text" — expected one of: sourceText`). The plan's
+`list_derivation_methods` lists each platform method's `inputs` (bind them
+by `internalLabel`) and `options` (by `internalKey`). The plan's
 `derivedFields` shows the user what each binding will run.
 
 Don't write new Python derivation methods as part of designing a deck. If

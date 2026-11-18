@@ -41,7 +41,7 @@ dry-run-validated versions of the first three.
   from the item's name. Add the reverse direction only where the user needs
   it (definition → term for spelling and production).
 - **Optional facts:** gate each optional fact's template with
-  `textFieldNonblank`, so it makes a card only where it is filled in.
+  `fieldNonblank`, so it makes a card only where it is filled in.
 - **Order:** the reverse direction depends on the forward one. Facts that
   explain each other (a drug's class explains its uses) can be ordered
   class-first. Most facts need no ordering.
