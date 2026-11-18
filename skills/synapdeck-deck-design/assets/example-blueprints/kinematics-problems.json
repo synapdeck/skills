@@ -32,7 +32,7 @@
             "name": "When to use",
             "front": "When do you reach for this equation?\n\n{{ Formula }}",
             "back": "{{ @front }}\n\n{{ When to use }}",
-            "renderingCriterion": { "condition": "textFieldNonblank", "controllingFieldName": "When to use" }
+            "renderingCriterion": { "condition": "fieldNonblank", "controllingFieldName": "When to use" }
           }
         ],
         "templateRelations": {

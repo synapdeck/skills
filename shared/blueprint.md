@@ -105,7 +105,7 @@ have the type the input expects, and it can't be the derived field itself.
   "name": "Recognition",
   "front": "# {{ Word }}",
   "back": "{{ @front }}\n\n{{ Meaning }}",
-  "renderingCriterion": { "condition": "textFieldNonblank", "controllingFieldName": "Meaning" }, // optional
+  "renderingCriterion": { "condition": "fieldNonblank", "controllingFieldName": "Meaning" }, // optional
   "writingSpaceOverride": "show-work",      // optional, per template
   "hideQuestionOnRevealOverride": true      // optional; null = follow the user's setting
 }
@@ -116,16 +116,12 @@ have the type the input expects, and it can't be the derived field itself.
 | `condition` | Extra keys | Card exists when |
 | --- | --- | --- |
 | `always` | — | always (the default) |
-| `textFieldNonblank` | `controllingFieldName` (a **text** field) | that field has text |
+| `fieldNonblank` | `controllingFieldName` (a text, image or audio field) | that field is filled in |
 | `onEnumFieldValue` | `controllingFieldName`, `matchingOptionLabels`, `matchesIrregular?` | the enum holds one of those labels |
 | `onBooleanFieldValue` | `controllingFieldName`, `matchingValue` | the boolean equals `matchingValue` |
 | `onTags` | `tags`, `mode`: `hasAny` / `hasAll` / `lacksAll` | the note's tags match |
 | `composite` | `operator`: `and` / `or`, `subcriteria` (non-composite criteria) | the combination holds |
 | `never` | — | never (keeps a template parked) |
-
-There is no criterion for image or audio fields. Gate the front with
-`:::if-nonblank{field="Audio"}` … `:::` instead: a card whose front renders
-blank is not generated.
 
 ## What the dry run returns
 

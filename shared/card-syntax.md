@@ -493,7 +493,7 @@ It is a property of the template (set on `create_note_type`,
 | --- | --- | --- |
 | `always` | | always (default) |
 | `never` | | never |
-| `textFieldNonblank` | `controllingFieldName` | the named **text** field is nonblank |
+| `fieldNonblank` | `controllingFieldName` | the named text, image or audio field is filled in |
 | `onEnumFieldValue` | `controllingFieldName`, `matchingOptionLabels`, optional `matchesIrregular` | the enum's chosen option is one of the labels |
 | `onBooleanFieldValue` | `controllingFieldName`, `matchingValue` | the boolean equals `matchingValue` |
 | `onTags` | `tags`, `mode`: `hasAny` / `hasAll` / `lacksAll` | the note's tags match |
@@ -505,19 +505,9 @@ It is a property of the template (set on `create_note_type`,
   { "condition": "onTags", "tags": ["keep"], "mode": "hasAny" } ] }
 ```
 
-- `textFieldNonblank` rejects any non-text field. To skip a card when an
-  image or audio field is empty, wrap the whole front in a conditional:
-
-  ```
-  :::if-nonblank{field="Audio"}
-  What word is this?
-
-  {{ Audio }}
-  :::
-  ```
-
-  A card whose front renders blank is not shown (`renders: false` in
-  `create_note`'s `cardIds`).
+- `fieldNonblank` counts text that is not just whitespace, or an attached
+  image or recording. A card whose criterion fails is not shown
+  (`renders: false` in `create_note`'s `cardIds`).
 - Ad hoc script fields are not available to criteria.
 
 ## Authoring traps

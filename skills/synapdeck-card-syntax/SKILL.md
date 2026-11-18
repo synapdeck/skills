@@ -51,11 +51,9 @@ anything beyond the rules below.
 10. **Math:** `$…$`, `$$…$$`, `\cloze{c1}{2xy}[hint]`, `\fieldvalue{Field}`.
     Write `\$` for every literal dollar, in math and prose alike.
 11. **Rendering criteria are template properties, not markup:**
-    `textFieldNonblank` (text fields only), `onEnumFieldValue`,
-    `onBooleanFieldValue`, `onTags`, `composite`, `always`, `never`. To skip a
-    card when an image or audio field is empty, wrap the whole front in
-    `:::if-nonblank{field="…"}` … `:::`; a card whose front renders blank is
-    not shown.
+    `fieldNonblank` (a text, image or audio field is filled in),
+    `onEnumFieldValue`, `onBooleanFieldValue`, `onTags`, `composite`,
+    `always`, `never`.
 12. **Plain copies:** `{{ F | plain }}` flattens markup, `{{ F | strip-cloze }}`
     shows clozes as text. Platform filters: `uppercase`, `lowercase`, `nfd`,
     `nfc`, `strip-diacritics`.
