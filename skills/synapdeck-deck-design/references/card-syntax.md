@@ -531,11 +531,12 @@ It is a property of the template (set on `create_note_type`,
 - **Clozes need a context.** `:c1[…]` in a field shown without `| cloze`
   makes no card.
 - **Clozes go in fields, not templates** (`cloze_key_at_template_level`).
-- **Template text is not validated on save.** `create_note_type`,
-  `update_note_type`, `add_template`, `update_template` and
-  `apply_deck_blueprint` (even with `dryRun`) accept an unknown `{{ Field }}`, a directive naming a missing field, or
-  `:color-coding` on an uncolored field. These appear only in `preview_card`
-  diagnostics against a real note.
+- **Most writes don't validate template text.** `create_note_type`,
+  `update_note_type`, `add_template` and `update_template` accept an unknown
+  `{{ Field }}`, a directive naming a missing field, or `:color-coding` on an
+  uncolored field. These appear only in `preview_card` diagnostics against a
+  real note. `apply_deck_blueprint` is the exception: it rejects field names
+  that don't exist and warns about uncolored color codings.
 - **Some mistakes are silent.** A comma-separated filter list, a placeholder
   split across lines, and missing media produce no diagnostic; read the
   rendered HTML too.

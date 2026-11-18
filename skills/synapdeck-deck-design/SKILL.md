@@ -42,10 +42,10 @@ recall *directions* the user needs, not for every field.
    unrelated to the new subject needs no mention. The new deck goes at the
    top level unless the user wants it under an existing one.
 2. **Interview** (below). Ask a few questions at a time, not a form.
-3. **Dry run.** Call `apply_deck_blueprint` with `dryRun: true`. Errors come
-   back a few at a time, not all at once, so fix them and dry-run again
-   until `validationErrors` is empty. You then propose a design that is
-   known to apply.
+3. **Dry run.** Call `apply_deck_blueprint` with `dryRun: true`. Every
+   error comes back at once, so fix them all and dry-run again until
+   `validationErrors` is empty, and fix any `validationWarnings` too. You
+   then propose a design that is known to apply.
 4. **Propose the design in plain language.** Name the decks and say what
    one note holds. Write out an example card for each template, using a
    real example from their subject. Say which cards come first, and why.
@@ -54,10 +54,10 @@ recall *directions* the user needs, not for every field.
 5. **Get approval, then apply.** Make the real call only after the user says
    yes to the design. Send an `idempotencyKey`, so that a retry can't create
    a second copy.
-6. **Check the cards against a real note.** The dry run checks structure,
-   not template text. Create one note of each type from the user's own
-   material, then call `preview_card` on it. Read every `diagnostics` entry
-   (for example `unknown_field_reference` for a mistyped `{{ Field }}`).
+6. **Check the cards against a real note.** The dry run checks the field
+   names a template mentions, but not how the cards render. Create one note
+   of each type from the user's own material, then call `preview_card` on
+   it. Read every `diagnostics` entry.
    Fix templates with `update_template`, and show the user the rendered
    cards.
 7. **Then fill it.** Ask before you add notes in bulk (`create_notes`, up to

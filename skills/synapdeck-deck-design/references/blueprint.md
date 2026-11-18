@@ -137,22 +137,29 @@ have the type the input expects, and it can't be the derived field itself.
     "prereqEdges", "peerEdges",
     "derivedFields": [{ "fieldName", "method": { "kind", "internalName", "internalVersion" }, "inputs", "options" }]
   }],
-  "validationErrors": [{ "path": "noteTypes[0].templateRelations.prereqs", "issue": "…" }]
+  "validationErrors": [{ "path": "noteTypes[0].templateRelations.prereqs", "issue": "…" }],
+  "validationWarnings": [{ "path": "noteTypes[0].templates[1].front", "issue": "…" }]
 }
 ```
 
-It **does** catch: duplicate handles or template names, unknown parent
-handles, relations naming a template that doesn't exist, prereq cycles,
-criteria naming a missing field or the wrong field type, and derivation
-bindings with unknown methods or inputs.
+It catches duplicate handles or template names, unknown parent handles,
+relations naming a template that doesn't exist, prereq cycles, criteria
+naming a missing field or the wrong field type, and derivation bindings
+with unknown methods or inputs.
 
-It does **not** read template text. A mistyped `{{ Field }}`, a directive
-pointing at a missing field, or `:color-coding` on an enum with no colors
-all pass the dry run. They only show up as `preview_card` diagnostics on a
-real note.
+It also checks each template's `front` and `back` against that note type's
+own fields. A `{{ Field }}`, a conditional or a `:color-coding` naming no
+field is an error, and so is `:color-coding` on a text or media field. A
+color coding on an enum or boolean that defines no colors, and
+`:if-true` / `:if-false` on a text or media field, come back in
+`validationWarnings` instead: they don't block, but fix them anyway.
 
-Errors arrive in stages: fixing one batch can reveal the next. Repeat until
+Every error comes back in one dry run. Fix them all and dry-run again until
 `validationErrors` is empty.
+
+Rendering problems that aren't about field names, such as a misspelled
+directive or a filter list, still show up only as `preview_card`
+diagnostics on a real note.
 
 ## What a real apply returns
 
